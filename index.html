@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Toxic100 Calculator</title>
+    <link rel="stylesheet" href="bootstrap.min.css">
+</head>
+
+<body>
+    <div class="container">
+        <div class="row bg-info p-5 rounded-3">
+            <div class="col-md-12">
+                <h1 class="text-center">MP REGEN CALCULATOR</h1>
+            </div>
+            <div class="col-md-12" id="calculate-mp">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>MP</th>
+                            <th>Cooldown</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr v-for="(item,i) in items">
+                            <td>
+                                <input type="number" class="form-control" placeholder="MP" v-model="item.mp">
+                            </td>
+                            <td>
+                                <input type="number" class="form-control" placeholder="Cooldown"
+                                    v-model="item.cooldown">
+                            </td>
+                            <td>
+                                <button class="btn btn-sm btn-danger" @click="deleteItem(i)">x</button>
+                            </td>
+                        </tr>
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            <td colspan="2" class="text-end">
+                                MP REGEN NEEDED
+                            </td>
+                            <td colspan="1">
+                                {{ calculated }}
+                            </td>
+                        </tr>
+                    </tfoot>
+                </table>
+                <div class="d-flex justify-content-between">
+                    <button class="btn btn-sm btn-warning" @click="addItem()">Add</button>
+                    <button class="btn btn-sm btn-success" @click="calculate()">Calculate</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <script>
+        const {
+            createApp,
+            ref
+        } = Vue
+
+        createApp({
+            setup() {
+                const items = ref([{
+                    cooldown: 0,
+                    mp: 0
+                }])
+                const calculated = ref(0)
+                const addItem = () => {
+                    items.value.push({
+                        cooldown: 0,
+                        mp: 0
+                    })
+                }
+                const deleteItem = (i) => {
+                    items.value.splice(i, 1)
+                }
+                const calculate = () => {
+                    let sum = 0;
+                    for (let i = 0; i < items.value.length; i++) {
+                        sum += (Number(items.value[i].mp) / Number(items.value[i].cooldown)) * 10
+                    }
+                    calculated.value = sum.toFixed(2)
+                }
+                return {
+                    items,
+                    addItem,
+                    deleteItem,
+                    calculated,
+                    calculate
+                }
+            }
+        }).mount('#calculate-mp')
+    </script>
+</body>
+
+</html>
